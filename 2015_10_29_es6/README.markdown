@@ -1,14 +1,63 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Notes](#)
-	- [Promises](#)
-	- [Iterators and iterables](#)
-	- [Generators](#)
-	- [Bonus: Sets](#)
-- [Exercises](#)
-	- [Classes](#)
-	- [Promises](#)
-	- [Iterators](#)
+- [Exercises](#exercises)
+  - [Classes](#classes)
+  - [Promises](#promises)
+  - [Iterators](#iterators)
+- [Notes](#notes)
+  - [Promises](#promises-1)
+  - [Iterators and iterables](#iterators-and-iterables)
+  - [Generators](#generators)
+  - [Bonus: Sets](#bonus-sets)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+## Exercises
+
+### Classes
+
+* build a Rectangle class.
+  * getArea method
+  * prevent setting the length to a negative value
+  * static variable that contains the count of instantiated objects
+* build a Square class that inherits from rectangle
+
+[Solution](solutions/classes.js)
+
+### Promises
+
+Use this promise visualization playground: http://bevacqua.github.io/promisees/.
+
+1. write a promise that is fulfilled after 3 seconds
+
+2. Write a function that takes in a delay in milliseconds, and returns a promise. If the delay is lower than 3,000 ms, it will resolve. If the delay is higher than that, it'll be rejected.
+
+3. what will the following code log? why?
+```javascript
+let p = new Promise(function(resolve, reject){ // this function is called the promise 'executor'
+    console.log('1')
+    resolve();
+})
+
+p.then(() => console.log('2'))
+
+console.log('3')
+```
+4. Make that promise throw an error on rejection, and log the error message when the promise is rejected.
+
+[Solutions](solutions/promises.js)
+
+### Iterators
+
+1. Create a function that returns the iterator [0, 1, 2, ...]
+2. Given an array, store in a variable an iterator that has the same values.
+3. Create an iterable class.
+4. Implement a `parrot` iterator that returns what is given to it.
+
+[Solutions](solutions/iterators.js)
 
 ## Notes
 
@@ -106,124 +155,3 @@ var arrayFromSet = [...s]
 ```
 
 
-## Exercises
-
-### Classes
-
-* build a Rectangle class.
-  * getArea method
-  * prevent setting the length to a negative value
-  * static variable that contains the count of instantiated objects
-* build a Square class that inherits from rectangle
-
-```javascript
-class Rectangle {
-    constructor(length, height) {
-        this._length = length
-        this._height = height
-        Rectangle.count = !Rectangle.count ? 1 : (Rectangle.count + 1)
-    }
-
-    getArea() {
-        return this._length * this._height
-    }
-
-    get length() {
-        return this._length
-    }
-    set length(value) {
-        if (value < 0) {
-            throw Error('A rectangle can\'t have a negative length!')
-        }
-        this._length = value
-    }
-}
-
-class Square extends Rectangle {
-    constructor(length) {
-        super(length, length)
-    }
-}
-```
-
-### Promises
-
-Use this promise visualization playground: http://bevacqua.github.io/promisees/.
-
-* write a promise that is fulfilled after 3 seconds
-
-```javascript
-var p = new Promise(function(resolve, reject) {
-  setTimeout(resolve, 3000)
-})
-```
-* Write a function that takes in a delay in milliseconds, and returns a promise. If the delay is lower than 3,000 ms, it will resolve. If the delay is higher than that, it'll be rejected.
-
-```javascript
-var f = function(interval) {
-  var p = new Promise(function(resolve, reject) {
-    setTimeout(reject, 3000);
-    setTimeout(resolve, interval);
-  });
-};
-```
-* what will the following code log? why?
-
-```javascript
-let p = new Promise(function(resolve, reject){ // this function is called the promise 'executor'
-  console.log('1')
-  resolve();
-})
-
-p.then(() => console.log('2'))
-
-console.log('3')
-
-// ANS: logs 1, 3, 2. The executor executes right away, but the fulfillment is added at the end of the job queue.
-```
-  * Make that promise throw an error on rejection, and log the error message when the promise is rejected.
-
-### Iterators
-
-* Create a function that returns the iterator [0, 1, 2, ...]
-* Given an array, store in a variable an iterator that has the same values.
-```javascript
-var arr = [1, 2, 4, 5, 3]
-var iter = arr[Symbol.iterator]()
-```
-* Create an iterable class.
-
-```javascript
-class Coucou {
-  constructor() {};
-
-  *[Symbol.iterator]() {
-    var i = 0;
-    while (i < 10) {
-      yield i;
-      i++;
-    }
-  }
-}
-
-var coucou = new Coucou()
-for (let i of coucou) {
-  console.log(i)
-}
-```
-* Implement a `parrot` iterator that returns what is given to it.
-
-```javascript
-function* parrot() {
-  let result = yield 1;
-  while (true) {
-    result = yield result;
-  }
-}
-
-let p = parrot();
-// initialize the parrot
-p.next()
-console.log(p.next('hello'))
-console.log(p.next('parrot'))
-```
